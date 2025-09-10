@@ -1,4 +1,4 @@
-version: 1.0.1
+version: 1.1.0
 name: launcher_shortcuts
 homepage: https://github.com/camilo1498/app_shortcuts
 description: "A comprehensive Flutter plugin for managing dynamic app shortcuts on both iOS and Android platforms. "
