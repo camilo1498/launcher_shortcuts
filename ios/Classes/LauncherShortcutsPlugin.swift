@@ -7,7 +7,7 @@ import UIKit
 /// This abstraction is primarily used to facilitate testing by allowing
 /// mock implementations of shortcut item sources.
 protocol ShortcutItemProviding: AnyObject {
-    /// The application\'s dynamic shortcut items.
+    /// The application's dynamic shortcut items.
     ///
     /// Setting this property should update the application\'s displayed
     /// shortcuts. Getting it should return the currently set shortcuts.
@@ -278,6 +278,12 @@ public final class LauncherShortcutsPlugin: NSObject, FlutterPlugin, ShortcutsAp
     /// - Parameter type: The `type` string of the shortcut item that was
     ///   activated.
     private func handleShortcut(_ type: String) {
+        guard isFlutterReady else {
+            // Buffer the action until Flutter is initialized.
+            pendingAction = type
+            return
+        }
+
         DispatchQueue.main.async {
             self.flutterApi.launchAction(action: type) { result in
                 // The result of the Flutter call can be logged or handled
