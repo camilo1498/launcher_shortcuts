@@ -2,7 +2,7 @@
 
 ![Pub Version](https://img.shields.io/pub/v/launcher_shortcuts)
 ![License](https://img.shields.io/badge/license-MIT-blue)
-![GitHub Stars](https://img.shields.io/github/stars/camilo1498/launcher_shortcuts?style=social)
+![GitHub Stars](https://img.shields.io/github/stars/camilo1498/launcher_shortcuts)
 ![GitHub User](https://img.shields.io/badge/GitHub-camilo1498-blue?logo=github)
 
 ⭐ **Support this project!** If you find this package useful, please consider giving it a star
