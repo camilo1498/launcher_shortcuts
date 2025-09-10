@@ -2,7 +2,7 @@ PODS:
   - Flutter (1.0.0)
   - integration_test (0.0.1):
     - Flutter
-  - launcher_shortcuts (0.0.1):
+  - launcher_shortcuts (1.1.3):
     - Flutter
 
 DEPENDENCIES:
@@ -21,7 +21,7 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
   integration_test: 4a889634ef21a45d28d50d622cf412dc6d9f586e
-  launcher_shortcuts: 30f0b209c9e82da5f4a6573ed62ef9d6b13e1196
+  launcher_shortcuts: 09050a7c0ddf9622a1ea37ad8d6a948bbdbb0a07
 
 PODFILE CHECKSUM: 4305caec6b40dde0ae97be1573c53de1882a07e5
 

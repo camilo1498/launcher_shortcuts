@@ -1,5 +1,7 @@
 # Changelog - Launcher Shortcuts Plugin
 
+## [1.1.4] - Flutter Assets Icons SVG for android
+
 ## [1.1.3] - Flutter Assets Icons & Platform-Specific Config
 
 ### Added

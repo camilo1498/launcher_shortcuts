@@ -4,7 +4,7 @@
 #
 Pod::Spec.new do |s|
   s.name             = 'launcher_shortcuts'
-  s.version          = '1.1.3'
+  s.version          = '1.1.4'
   s.summary          = 'A new Flutter project.'
   s.description      = <<-DESC
 A new Flutter project.
