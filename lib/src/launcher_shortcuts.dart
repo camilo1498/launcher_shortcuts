@@ -17,8 +17,8 @@ class LauncherShortcuts {
   /// listeners. When a listener subscribes, if there's a pending action,
   /// it's immediately emitted. This ensures that actions are not missed if
   /// they arrive before a listener is active.
-  static final StreamController<String>
-  _shortcutController = StreamController<String>.broadcast(
+  static final StreamController<String> _shortcutController =
+      StreamController<String>.broadcast(
     onListen: () {
       // If a pending action exists when a listener is added, emit it.
       // This handles cases where an action was received before any part of the

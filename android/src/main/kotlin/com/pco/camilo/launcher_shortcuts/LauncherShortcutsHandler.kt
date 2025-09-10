@@ -5,10 +5,13 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.ShortcutInfo
 import android.content.pm.ShortcutManager
+import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.drawable.Icon
 import android.util.Log
+import com.caverock.androidsvg.SVG
 import java.lang.Exception
+import androidx.core.graphics.createBitmap
 
 /**
  * Manages Android-specific application shortcut functionalities.
@@ -123,24 +126,71 @@ class LauncherShortcutsHandler(private val context: Context) : AndroidShortcutsA
                     // Set the short label (visible to user). Fallback to item.type
                     // if localizedTitle is blank.
                     .setShortLabel(item.localizedTitle.takeIf { it.isNotBlank() } ?: item.type)
-                    .setLongLabel(item?.androidConfig?.localizedLongLabel ?: "")
                     .setIntent(intent)
 
+                // Set long label only if it's not null or blank.
+                val longLabel = item.androidConfig?.localizedLongLabel
+                if (!longLabel.isNullOrBlank()) {
+                    builder.setLongLabel(longLabel)
+                }
+
+                // Attempt to load and set the icon from Flutter assets if specified.
                 // Attempt to load and set the icon from Flutter assets if specified.
                 item.androidConfig?.icon?.let { assetRelativePath ->
                     try {
-                        // Get the Flutter asset key for the given relative path.
+                        // Validate extension before trying to decode.
+                        val lowerPath = assetRelativePath.lowercase()
                         val assetKey = flutterLoader.getLookupKeyForAsset(assetRelativePath)
-                        // Open the asset and decode it into a Bitmap.
-                        context.assets.open(assetKey).use { inputStream ->
-                            val bitmap = BitmapFactory.decodeStream(inputStream)
-                            if (bitmap != null) {
-                                builder.setIcon(Icon.createWithBitmap(bitmap))
-                            } else {
-                                // Log a warning if bitmap decoding fails.
+
+                        when {
+                            lowerPath.endsWith(".svg") -> {
+                                try {
+                                    // Render SVG to Bitmap using AndroidSVG
+                                    context.assets.open(assetKey).use { inputStream ->
+                                        val svg = SVG.getFromInputStream(
+                                            inputStream
+                                        )
+                                        val picture = svg.renderToPicture()
+                                        val bitmap = createBitmap(
+                                            picture.width.coerceAtLeast(1),
+                                            picture.height.coerceAtLeast(1)
+                                        )
+                                        val canvas = android.graphics.Canvas(bitmap)
+                                        canvas.drawPicture(picture)
+                                        builder.setIcon(Icon.createWithBitmap(bitmap))
+                                    }
+                                } catch (e: Exception) {
+                                    Log.e(
+                                        "LauncherShortcuts",
+                                        "Error rendering SVG: $assetRelativePath",
+                                        e
+                                    )
+                                }
+                            }
+
+                            lowerPath.endsWith(".png") ||
+                                    lowerPath.endsWith(".jpg") ||
+                                    lowerPath.endsWith(".jpeg") ||
+                                    lowerPath.endsWith(".webp") -> {
+                                // Raster formats → decode directly
+                                context.assets.open(assetKey).use { inputStream ->
+                                    val bitmap = BitmapFactory.decodeStream(inputStream)
+                                    if (bitmap != null) {
+                                        builder.setIcon(Icon.createWithBitmap(bitmap))
+                                    } else {
+                                        Log.w(
+                                            "LauncherShortcuts",
+                                            "Failed to decode raster image for asset: $assetRelativePath"
+                                        )
+                                    }
+                                }
+                            }
+
+                            else -> {
+                                // Skip unsupported formats silently
                                 Log.w(
                                     "LauncherShortcuts",
-                                    "Failed to decode bitmap for asset: $assetRelativePath"
+                                    "Unsupported icon format: $assetRelativePath"
                                 )
                             }
                         }
@@ -154,6 +204,7 @@ class LauncherShortcutsHandler(private val context: Context) : AndroidShortcutsA
                         )
                     }
                 }
+
                 builder.build()
             }
             // Set/update the dynamic shortcuts. This replaces any existing list.
