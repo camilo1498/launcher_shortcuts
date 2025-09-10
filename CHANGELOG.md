@@ -1,6 +1,6 @@
 # Changelog - Launcher Shortcuts Plugin
 
-## [1.1.2] - Flutter Assets Icons & Platform-Specific Config
+## [1.1.3] - Flutter Assets Icons & Platform-Specific Config
 
 ### Added
 
